@@ -1,0 +1,13 @@
+{
+    "name": "stream-o",
+    "version": "1.0.0",
+    "private": true,
+    "license": "MIT",
+    "dependencies": {
+        "@videojs/http-streaming": "^1.10.4",
+        "video.js": "^7.6.0",
+        "videojs-airplay": "^1.1.1",
+        "webpack": "^4.35.3",
+        "webpack-cli": "^3.3.5"
+    }
+}
