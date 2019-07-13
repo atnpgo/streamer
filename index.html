@@ -4,23 +4,70 @@
     <meta charset="UTF-8">
     <title>Stream</title>
 
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
     <link href="node_modules/video.js/dist/video-js.min.css" rel="stylesheet">
     <link href="node_modules/videojs-airplay/dist/videojs.airplay.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300&display=swap" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
+
 
     <script src="node_modules/video.js/dist/video.min.js"></script>
     <script src="node_modules/@videojs/http-streaming/dist/videojs-http-streaming.min.js"></script>
     <script src="node_modules/videojs-airplay/dist/videojs.airplay.js"></script>
+
+    <script crossorigin="anonymous" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script crossorigin="anonymous" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script crossorigin="anonymous" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+    <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js" type="application/javascript"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-auth.js" type="application/javascript"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-storage.js" type="application/javascript"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js" type="application/javascript"></script>
+    <script src="init-firebase.js"></script>
+
+    <script src="main.js"></script>
 </head>
-<body>
+<body class="d-flex">
 <video class="video-js vjs-default-skin" controls id="player" preload="none">
     <source src="hls/stream.m3u8" type="application/x-mpegURL"/>
 </video>
+<div class="sidebar d-flex flex-column">
+    <div class="btn-toolbar m-2" role="toolbar">
+        <div class="btn-group" role="group">
+            <button class="btn btn-outline-light mr-2" id="btn-fullscreen" type="button"><i class="fas fa-expand-arrows-alt"></i></button>
+        </div>
+        <div aria-label="Third group" class="btn-group" role="group">
+            <button class="btn btn-outline-light mr-2" id="btn-sign-in" type="button"><i class="fas fa-sign-in-alt"></i></button>
+        </div>
+        <div aria-label="Third group" class="btn-group" role="group">
+            <button class="btn btn-outline-light" id="btn-sign-out" type="button"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </div>
+    <div class="chat"></div>
+    <div class="chat-box m-2">
+        <form class="input-group" id="form-send-message">
+            <div class="input-group-prepend">
+                <button class="btn btn-outline-light" disabled="disabled" id="btn-add-image" type="button"><i class="fas fa-image"></i></button>
+            </div>
+            <input aria-describedby="btn-send" aria-label="Message Body" class="form-control" disabled="disabled" placeholder="Please sign in to send messages" type="text">
+            <div class="input-group-append">
+                <button class="btn btn-outline-light" disabled="disabled" id="btn-send" type="submit">Send</button>
+            </div>
+        </form>
+    </div>
+</div>
 <script>
     videojs('#player', {
         autoplay: 'any',
         plugins: {airplayButton: {}}
     });
+    videojs.addLanguage('en', {"The media could not be loaded, either because the server or network failed or because the format is not supported.": "Stream is currently offline, check back later."});
 </script>
 </body>
 </html>
