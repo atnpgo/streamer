@@ -1,13 +1,14 @@
 "use strict";
 
 var room = window.location.hash.substring(1);
-$('source').attr('src', 'hls/' + room + '.m3u8');
-videojs('#player', {
+$('source').attr('src', 'https://stream.atnpgo.wtf/hls/' + room + '.m3u8');
+var player = videojs('#player', {
     autoplay: 'any',
     plugins: {
         airplayButton: {}
     }
 });
+player.hlsQualitySelector();
 videojs.addLanguage('en', {
     "The media could not be loaded, either because the server or network failed or because the format is not supported.": "Stream is currently offline, check back later."
 });

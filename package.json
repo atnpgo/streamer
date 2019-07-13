@@ -11,6 +11,9 @@
     "dependencies": {
         "@videojs/http-streaming": "^1.10.4",
         "video.js": "^7.6.0",
-        "videojs-airplay": "^1.1.1"
+        "videojs-airplay": "^1.1.1",
+        "videojs-contrib-quality-levels": "^2.0.9",
+        "videojs-hls-quality-selector": "^1.0.5",
+        "videojs-http-source-selector": "^1.1.5"
     }
 }
