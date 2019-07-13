@@ -30,8 +30,6 @@
     <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-storage.js" type="application/javascript"></script>
     <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js" type="application/javascript"></script>
     <script src="init-firebase.js"></script>
-
-    <script src="main.js"></script>
 </head>
 <body class="d-flex">
 <video class="video-js vjs-default-skin" controls id="player" preload="none">
@@ -62,12 +60,6 @@
         </form>
     </div>
 </div>
-<script>
-    videojs('#player', {
-        autoplay: 'any',
-        plugins: {airplayButton: {}}
-    });
-    videojs.addLanguage('en', {"The media could not be loaded, either because the server or network failed or because the format is not supported.": "Stream is currently offline, check back later."});
-</script>
+<script src="main.js"></script>
 </body>
 </html>

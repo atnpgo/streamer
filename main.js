@@ -1,11 +1,19 @@
 "use strict";
 
+var room = window.location.hash.substring(1);
+$('source').attr('src', 'hls/' + room + '.m3u8');
+videojs('#player', {
+    autoplay: 'any',
+    plugins: {
+        airplayButton: {}
+    }
+});
+videojs.addLanguage('en', {
+    "The media could not be loaded, either because the server or network failed or because the format is not supported.": "Stream is currently offline, check back later."
+});
+
 var addSizeToGoogleProfilePic = function addSizeToGoogleProfilePic(url) {
     return url.indexOf('googleusercontent.com') !== -1 && url.indexOf('?') === -1 ? url + '?sz=150' : url;
-};
-
-var isUserSignedIn = function isUserSignedIn() {
-    return !!firebase.auth().currentUser;
 };
 
 var getProfilePicUrl = function getProfilePicUrl() {
@@ -17,7 +25,7 @@ var getUserName = function getUserName() {
 };
 
 var saveMessage = function saveMessage(messageText) {
-    return firebase.firestore().collection('messages').add({
+    return firebase.firestore().collection(room).add({
         name: getUserName(),
         text: messageText,
         profilePicUrl: getProfilePicUrl(),
@@ -28,7 +36,7 @@ var saveMessage = function saveMessage(messageText) {
 };
 
 var saveImageMessage = function saveImageMessage(file) {
-    return firebase.firestore().collection('messages').add({
+    return firebase.firestore().collection(room).add({
         name: getUserName(),
         imageUrl: 'https://www.google.com/images/spin-32.gif?a',
         profilePicUrl: getProfilePicUrl(),
@@ -44,22 +52,6 @@ var saveImageMessage = function saveImageMessage(file) {
         });
     })["catch"](function (error) {
         return console.error('There was an error uploading a file to Cloud Storage:', error);
-    });
-};
-
-var loadMessages = function loadMessages() {
-    // Create the query to load the last 12 messages and listen for new ones.
-    var query = firebase.firestore().collection('messages').orderBy('timestamp', 'asc').limit(25); // Start listening to the query.
-
-    query.onSnapshot(function (snapshot) {
-        return snapshot.docChanges().forEach(function (change) {
-            if (change.type === 'removed') {
-                deleteMessage(change.doc.id);
-            } else {
-                var message = change.doc.data();
-                displayMessage(change.doc.id, message.timestamp, message.name, message.text, message.profilePicUrl, message.imageUrl);
-            }
-        });
     });
 };
 
@@ -115,107 +107,115 @@ var displayMessage = function displayMessage(id, timestamp, name, text, picUrl, 
     document.querySelector('input').focus();
 };
 
-$(document).ready(function () {
-    var $btnSignIn = $('#btn-sign-in').click(function () {
-        return firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
-    });
-    var $btnSignOut = $('#btn-sign-out').click(function () {
-        return firebase.auth().signOut();
-    });
-    $btnSignOut.hide();
-    $btnSignIn.show();
-    firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-            $btnSignOut.show();
-            $btnSignIn.hide();
-            $('input').removeAttr('disabled').attr('placeholder', 'Message');
-            $('#form-send-message button').removeAttr('disabled'); //saveMessagingDeviceToken();
-        } else {
-            $btnSignOut.hide();
-            $btnSignIn.show();
-            $('input').attr('disabled', 'disabled').attr('placeholder', 'Please sign in to send messages');
-            $('#form-send-message button').attr('disabled', 'disabled');
+var $btnSignIn = $('#btn-sign-in').click(function () {
+    return firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
+});
+var $btnSignOut = $('#btn-sign-out').click(function () {
+    return firebase.auth().signOut();
+});
+$btnSignOut.hide();
+$btnSignIn.show();
+firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+        $btnSignOut.show();
+        $btnSignIn.hide();
+        $('input').removeAttr('disabled').attr('placeholder', 'Message');
+        $('#form-send-message button').removeAttr('disabled'); //saveMessagingDeviceToken();
+    } else {
+        $btnSignOut.hide();
+        $btnSignIn.show();
+        $('input').attr('disabled', 'disabled').attr('placeholder', 'Please sign in to send messages');
+        $('#form-send-message button').attr('disabled', 'disabled');
+    }
+});
+$('#btn-add-image').click(function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/png, image/jpeg, image/gif';
+
+    input.onchange = function (e) {
+        var file = e.target.files[0];
+
+        if (!file.type.match('image.*')) {
+            alert('You can only share images');
+            return;
         }
-    });
-    $('#btn-add-image').click(function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/png, image/jpeg, image/gif';
 
-        input.onchange = function (e) {
-            var file = e.target.files[0];
-
-            if (!file.type.match('image.*')) {
-                alert('You can only share images');
-                return;
-            }
-
-            saveImageMessage(file);
-        };
-
-        input.click();
-    });
-    $('#form-send-message').submit(function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var message = e.currentTarget.querySelector('input').value;
-        e.currentTarget.querySelector('input').value = '';
-        saveMessage(message);
-    });
-
-    var toggle = function toggle() {
-        return $('.fa-expand-arrows-alt,.fa-compress-arrows-alt').toggleClass('fa-expand-arrows-alt fa-compress-arrows-alt');
+        saveImageMessage(file);
     };
 
-    document.addEventListener('fullscreenchange', toggle, false);
-    document.addEventListener('webkitfullscreenchange', toggle, false);
-    document.addEventListener('mozfullscreenchange', toggle, false);
-    document.addEventListener('msfullscreenchange', toggle, false);
+    input.click();
+});
+$('#form-send-message').submit(function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var message = e.currentTarget.querySelector('input').value;
+    e.currentTarget.querySelector('input').value = '';
+    saveMessage(message);
+});
 
-    var active = function active() {
-        if (document.fullscreenElement != null) {
-            return true;
-        } else if (document.fullscreen) {
-            return document.fullscreen;
-        } else if (document.webkitIsFullScreen) {
-            return document.webkitIsFullScreen;
-        } else if (document.mozIsFullScreen) {
-            return document.mozIsFullScreen;
-        } else if (document.msIsFullScreen) {
-            return document.msIsFullScreen;
-        } else {
-            return false;
+var toggle = function toggle() {
+    return $('.fa-expand-arrows-alt,.fa-compress-arrows-alt').toggleClass('fa-expand-arrows-alt fa-compress-arrows-alt');
+};
+
+document.addEventListener('fullscreenchange', toggle, false);
+document.addEventListener('webkitfullscreenchange', toggle, false);
+document.addEventListener('mozfullscreenchange', toggle, false);
+document.addEventListener('msfullscreenchange', toggle, false);
+
+var active = function active() {
+    if (document.fullscreenElement != null) {
+        return true;
+    } else if (document.fullscreen) {
+        return document.fullscreen;
+    } else if (document.webkitIsFullScreen) {
+        return document.webkitIsFullScreen;
+    } else if (document.mozIsFullScreen) {
+        return document.mozIsFullScreen;
+    } else if (document.msIsFullScreen) {
+        return document.msIsFullScreen;
+    } else {
+        return false;
+    }
+};
+
+var $btnFullscreen = $('#btn-fullscreen').click(function () {
+    if (active()) {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.mozExitFullscreen) {
+            document.mozExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
         }
-    };
-
-    var $btnFullscreen = $('#btn-fullscreen').click(function () {
-        if (active()) {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.mozExitFullscreen) {
-                document.mozExitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
+    } else {
+        if (document.body.requestFullscreen) {
+            document.body.requestFullscreen();
+        } else if (document.body.webkitRequestFullscreen) {
+            document.body.webkitRequestFullscreen();
+        } else if (document.body.mozRequestFullscreen) {
+            document.body.mozRequestFullscreen();
+        } else if (document.body.msRequestFullscreen) {
+            document.body.msRequestFullscreen();
         } else {
-            if (document.body.requestFullscreen) {
-                document.body.requestFullscreen();
-            } else if (document.body.webkitRequestFullscreen) {
-                document.body.webkitRequestFullscreen();
-            } else if (document.body.mozRequestFullscreen) {
-                document.body.mozRequestFullscreen();
-            } else if (document.body.msRequestFullscreen) {
-                document.body.msRequestFullscreen();
-            } else {
-                $btnFullscreen.hide();
-                alert('Please use your browser\'s fullscreen.');
-            }
+            $btnFullscreen.hide();
+            alert('Please use your browser\'s fullscreen.');
+        }
+    }
+});
+var query = firebase.firestore().collection(room).orderBy('timestamp', 'asc').limit(25);
+query.onSnapshot(function (snapshot) {
+    return snapshot.docChanges().forEach(function (change) {
+        if (change.type === 'removed') {
+            deleteMessage(change.doc.id);
+        } else {
+            var message = change.doc.data();
+            displayMessage(change.doc.id, message.timestamp, message.name, message.text, message.profilePicUrl, message.imageUrl);
         }
     });
-    loadMessages();
 });
 //# sourceMappingURL=main.js.map
