@@ -1,21 +1,85 @@
+$sidebar-width: 20%;
+$sidebar-min-width: 300px;
+
+$font-family-sans-serif: 'Open Sans', sans-serif;
+
+$black: #FFF;
+$gray-900: #FFF;
+$gray-800: #E6E6E6;
+$gray-700: #CCC;
+$gray-600: #B2B2B2;
+$gray-500: #999;
+$gray-400: #808080;
+$gray-300: #666;
+$gray-200: #4D4D4D;
+$gray-100: #333;
+$white: #333;
+
+@import "bootstrap-4.3.1/functions";
+@import "bootstrap-4.3.1/variables";
+@import "bootstrap-4.3.1/mixins";
+@import "bootstrap-4.3.1/root";
+@import "bootstrap-4.3.1/reboot";
+@import "bootstrap-4.3.1/type";
+@import "bootstrap-4.3.1/images";
+@import "bootstrap-4.3.1/code";
+@import "bootstrap-4.3.1/grid";
+@import "bootstrap-4.3.1/tables";
+@import "bootstrap-4.3.1/forms";
+@import "bootstrap-4.3.1/buttons";
+@import "bootstrap-4.3.1/transitions";
+@import "bootstrap-4.3.1/dropdown";
+@import "bootstrap-4.3.1/button-group";
+@import "bootstrap-4.3.1/input-group";
+@import "bootstrap-4.3.1/custom-forms";
+@import "bootstrap-4.3.1/nav";
+@import "bootstrap-4.3.1/navbar";
+@import "bootstrap-4.3.1/card";
+@import "bootstrap-4.3.1/breadcrumb";
+@import "bootstrap-4.3.1/pagination";
+@import "bootstrap-4.3.1/badge";
+@import "bootstrap-4.3.1/jumbotron";
+@import "bootstrap-4.3.1/alert";
+@import "bootstrap-4.3.1/progress";
+@import "bootstrap-4.3.1/media";
+@import "bootstrap-4.3.1/list-group";
+@import "bootstrap-4.3.1/close";
+@import "bootstrap-4.3.1/toasts";
+@import "bootstrap-4.3.1/modal";
+@import "bootstrap-4.3.1/tooltip";
+@import "bootstrap-4.3.1/popover";
+@import "bootstrap-4.3.1/carousel";
+@import "bootstrap-4.3.1/spinners";
+@import "bootstrap-4.3.1/utilities";
+@import "bootstrap-4.3.1/print";
+
+
 html, body {
     width: 100%;
     height: 100%;
     margin: 0;
-    background-color: #333;
-    color: #FFF;
-    font-family: 'Open Sans', sans-serif;
+}
+
+#container {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    
+    &.visible {
+        opacity: 1;
+    }
 }
 
 #player {
-    width: 80%;
+    width: (100% - $sidebar-width);
     height: 100%;
-    max-width: calc(100% - 300px);
+    max-width: calc(100% - #{$sidebar-min-width});
 }
 
 .sidebar {
     width: 20%;
-    min-width: 300px;
+    min-width: $sidebar-min-width;
     height: 100%;
 }
 
@@ -30,7 +94,7 @@ html, body {
     align-items: center;
     
     margin-top: 0.5rem;
-    border-top: 1px solid #666;
+    border-top: 1px solid $gray-300;
     padding-top: 0.5rem;
     opacity: 0;
     transition: opacity 1s ease-in-out;
@@ -67,7 +131,7 @@ html, body {
     & .name {
         display: inline-block;
         width: 100%;
-        color: #666;
+        color: $gray-300;
         font-style: italic;
         font-size: 0.666rem;
         box-sizing: border-box;
@@ -75,5 +139,15 @@ html, body {
     
     & img {
         max-width: 100%;
+    }
+}
+
+#name {
+    color: $gray-300;
+}
+
+.btn-outline-dark {
+    &:active, &:hover {
+        color: $white !important;
     }
 }
