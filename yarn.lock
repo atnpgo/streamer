@@ -1921,7 +1921,7 @@ object-visit@^1.0.0:
   dependencies:
     isobject "^3.0.0"
 
-object.assign@^4.1.0:
+object.assign@^4.0.3, object.assign@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/object.assign/-/object.assign-4.1.0.tgz#968bf1100d7956bb3ca086f006f846b3bc4008da"
   integrity sha512-exHJeq6kBKj58mqGyTQ9DFvrZC/eR6OwxzoM9YRoGBqrXYonaFyGiFMuc9VZrXf7DarreEwMpurG3dd+CNyW5w==
@@ -2501,7 +2501,7 @@ util-deprecate@~1.0.1:
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
 
-video.js@^5.2.1:
+video.js@^5.0.0, video.js@^5.2.1:
   version "5.20.5"
   resolved "https://registry.yarnpkg.com/video.js/-/video.js-5.20.5.tgz#445cdae204bce459782d86a31b25a32afd6d8eff"
   integrity sha1-RFza4gS85Fl4LYajGyWjKv1tjv8=
@@ -2538,6 +2538,15 @@ videojs-airplay@^1.1.1:
   dependencies:
     global "^4.3.2"
     video.js "^5.2.1"
+
+videojs-chromecast@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/videojs-chromecast/-/videojs-chromecast-2.0.8.tgz#55e2911cf5cc427974c1d8e80d4d22124d152ef9"
+  integrity sha1-VeKRHPXMQnl0wdjoDU0iEk0VLvk=
+  dependencies:
+    global "^4.3.0"
+    object.assign "^4.0.3"
+    video.js "^5.0.0"
 
 videojs-contrib-quality-levels@^2.0.4, videojs-contrib-quality-levels@^2.0.9:
   version "2.0.9"

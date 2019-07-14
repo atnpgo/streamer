@@ -1,6 +1,6 @@
 const room = window.location.hash.substring(1);
 
-$('source').attr('src', 'https://stream.atnpgo.wtf/hls/' + room + '.m3u8');
+$('source').attr('src', 'hls/' + room + '.m3u8');
 
 const player = videojs('#player', {
     autoplay: 'any',
