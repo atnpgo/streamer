@@ -151,3 +151,7 @@ html, body {
         color: $white !important;
     }
 }
+
+.container[data-container] {
+    min-width: 100%;
+}

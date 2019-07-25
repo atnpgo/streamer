@@ -2,16 +2,39 @@
 
 (function () {
   var buildRoom = function buildRoom(room) {
-    $('source').attr('src', 'hls/' + room + '.m3u8');
-    var player = videojs('#player', {
-      autoplay: 'any',
-      plugins: {
-        airplayButton: {}
+    var player = new Clappr.Player({
+      source: 'rtmp://stream.atnpgo.wtf/ingest/' + room,
+      parentId: "#player",
+      autoPlay: true,
+      chromeless: false,
+      disableKeyboardShortcuts: true,
+      width: '100%',
+      height: '100%',
+      plugins: [RTMP],
+      rtmpConfig: {
+        //scaling: 'stretch',
+        playbackType: 'live',
+        bufferTime: 1,
+        startLevel: 0,
+        autoSwitch: true,
+        switchRules: {
+          "SufficientBandwidthRule": {
+            "bandwidthSafetyMultiple": 1.15,
+            "minDroppedFps": 2
+          },
+          "InsufficientBufferRule": {
+            "minBufferLength": 2
+          },
+          "DroppedFramesRule": {
+            "downSwitchByOne": 10,
+            "downSwitchByTwo": 20,
+            "downSwitchToZero": 24
+          },
+          "InsufficientBandwidthRule": {
+            "bitrateMultiplier": 1.15
+          }
+        }
       }
-    });
-    player.hlsQualitySelector();
-    videojs.addLanguage('en', {
-      "The media could not be loaded, either because the server or network failed or because the format is not supported.": "Stream is currently offline, check back later."
     });
 
     var addSizeToGoogleProfilePic = function addSizeToGoogleProfilePic(url) {

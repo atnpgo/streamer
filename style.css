@@ -9735,4 +9735,8 @@ html, body {
   color: #333 !important;
 }
 
+.container[data-container] {
+    min-width: 100%;
+}
+
 /*# sourceMappingURL=style.css.map */
