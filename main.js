@@ -101,7 +101,7 @@ function joinScreen(roomid) {
   var register = {
     "request": "join",
     "room": room,
-    "ptype": "publisher",
+    "ptype": "listener",
     "display": myusername
   };
   screentest.send({

@@ -84,7 +84,7 @@ function joinScreen(roomid) {
     room = parseInt(roomid);
     role = "listener";
     myusername = randomString(12);
-    var register = {"request": "join", "room": room, "ptype": "publisher", "display": myusername};
+    var register = {"request": "join", "room": room, "ptype": "listener", "display": myusername};
     screentest.send({"message": register});
     buildRoom(room);
 }
