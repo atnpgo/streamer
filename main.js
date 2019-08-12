@@ -457,7 +457,7 @@ Janus.init({
             screentest = pluginHandle;
 
             if (room.length > 0) {
-              buildRoom(room);
+              joinScreen(room);
             }
 
             Janus.log("Plugin attached! (" + screentest.getPlugin() + ", id=" + screentest.getId() + ")");
