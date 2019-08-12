@@ -520,17 +520,6 @@ const buildRoom = room => {
                                         $('#screencapture').append('<video class="rounded centered" id="screenvideo" width="100%" height="100%" autoplay playsinline muted="muted"/>');
                                     }
                                     Janus.attachMediaStream($('#screenvideo').get(0), stream);
-                                    if (screentest.webrtcStuff.pc.iceConnectionState !== "completed" &&
-                                        screentest.webrtcStuff.pc.iceConnectionState !== "connected") {
-                                        $("#screencapture").parent().block({
-                                            message: '<b>Publishing...</b>',
-                                            css: {
-                                                border: 'none',
-                                                backgroundColor: 'transparent',
-                                                color: 'white'
-                                            }
-                                        });
-                                    }
                                 },
                                 onremotestream: function (stream) {
                                     // The publisher stream is sendonly, we don't expect anything here
