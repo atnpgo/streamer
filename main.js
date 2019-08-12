@@ -2,41 +2,6 @@
 
 (function () {
   var buildRoom = function buildRoom(room) {
-    var player = new Clappr.Player({
-      source: 'rtmp://stream.atnpgo.wtf/ingest/' + room,
-      parentId: "#player",
-      autoPlay: true,
-      chromeless: false,
-      disableKeyboardShortcuts: true,
-      width: '100%',
-      height: '100%',
-      plugins: [RTMP],
-      rtmpConfig: {
-        //scaling: 'stretch',
-        playbackType: 'live',
-        bufferTime: 1,
-        startLevel: 0,
-        autoSwitch: true,
-        switchRules: {
-          "SufficientBandwidthRule": {
-            "bandwidthSafetyMultiple": 1.15,
-            "minDroppedFps": 2
-          },
-          "InsufficientBufferRule": {
-            "minBufferLength": 2
-          },
-          "DroppedFramesRule": {
-            "downSwitchByOne": 10,
-            "downSwitchByTwo": 20,
-            "downSwitchToZero": 24
-          },
-          "InsufficientBandwidthRule": {
-            "bitrateMultiplier": 1.15
-          }
-        }
-      }
-    });
-
     var addSizeToGoogleProfilePic = function addSizeToGoogleProfilePic(url) {
       return url.indexOf('googleusercontent.com') !== -1 && url.indexOf('?') === -1 ? url + '?sz=150' : url;
     };
@@ -144,14 +109,14 @@
       if (user) {
         $btnSignOut.show();
         $btnSignIn.hide();
-        $('input').removeAttr('disabled').attr('placeholder', 'Message');
+        $('#form-send-message input').removeAttr('disabled').attr('placeholder', 'Message');
         $('#form-send-message button').removeAttr('disabled');
         document.querySelector('#name').innerHTML = getUserName();
         document.querySelector('#pfp').src = addSizeToGoogleProfilePic(getProfilePicUrl());
       } else {
         $btnSignOut.hide();
         $btnSignIn.show();
-        $('input').attr('disabled', 'disabled').attr('placeholder', 'Please sign in to send messages');
+        $('#form-send-message input').attr('disabled', 'disabled').attr('placeholder', 'Please sign in to send messages');
         $('#form-send-message button').attr('disabled', 'disabled');
         document.querySelector('#name').innerHTML = 'Please sign in <i class="fas fa-arrow-right"></i>';
         document.querySelector('#pfp').src = 'profile_placeholder.png';
