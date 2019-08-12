@@ -9665,7 +9665,7 @@ html, body {
   opacity: 1;
 }
 
-#player {
+.player {
   width: 80%;
   height: 100%;
   max-width: calc(100% - 300px);

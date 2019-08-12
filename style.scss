@@ -71,7 +71,7 @@ html, body {
     }
 }
 
-#player {
+.player {
     width: (100% - $sidebar-width);
     height: 100%;
     max-width: calc(100% - #{$sidebar-min-width});

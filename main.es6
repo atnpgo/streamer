@@ -141,13 +141,6 @@ function newRemoteFeed(id, display) {
                 Janus.debug("Event: " + event);
                 if (event != undefined && event != null) {
                     if (event === "attached") {
-                        // Subscriber created and attached
-                        if (spinner === undefined || spinner === null) {
-                            var target = document.getElementById('#screencapture');
-                            spinner = new Spinner({top: 100}).spin(target);
-                        } else {
-                            spinner.spin();
-                        }
                         Janus.log("Successfully attached to feed " + id + " (" + display + ") in room " + msg["room"]);
                         $('#screenmenu').toggleClass('d-flex d-none');
                         $('#room').toggleClass('d-flex d-none');
@@ -434,25 +427,9 @@ const buildRoom = room => {
                                 },
                                 consentDialog: function (on) {
                                     Janus.debug("Consent dialog should be " + (on ? "on" : "off") + " now");
-                                    if (on) {
-                                        // Darken screen
-                                        $.blockUI({
-                                            message: '',
-                                            css: {
-                                                border: 'none',
-                                                padding: '15px',
-                                                backgroundColor: 'transparent',
-                                                color: '#aaa'
-                                            }
-                                        });
-                                    } else {
-                                        // Restore screen
-                                        $.unblockUI();
-                                    }
                                 },
                                 webrtcState: function (on) {
                                     Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
-                                    $("#screencapture").parent().unblock();
                                     if (on) {
                                         alert("Your screen sharing session just started: pass the <b>" + room + "</b> session identifier to those who want to attend.");
                                     } else {
@@ -561,7 +538,6 @@ const buildRoom = room => {
                                 oncleanup: function () {
                                     Janus.log(" ::: Got a cleanup notification :::");
                                     $('#screencapture').empty();
-                                    $("#screencapture").parent().unblock();
                                     $('#room').toggleClass('d-flex d-none');
                                 }
                             });
