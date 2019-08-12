@@ -55,6 +55,7 @@ function shareScreen() {
     // Create a new room
     var desc = $('#desc').val();
     role = "publisher";
+
     var create = {"request": "create", "description": desc, "bitrate": 1000000, "publishers": 1};
     screentest.send({
         "message": create, success: function (result) {
@@ -68,7 +69,8 @@ function shareScreen() {
                 var register = {"request": "join", "room": room, "ptype": "publisher", "display": myusername};
                 screentest.send({"message": register});
                 history.pushState({}, room, "#" + room);
-                $('#no-stream-modal').on('hidden.bs.modal', () => buildRoom(room)).modal('hide');
+                document.querySelector('#container').classList.add('visible');
+                $('#no-stream-modal').modal('hide');
             }
         }
     });
@@ -76,11 +78,6 @@ function shareScreen() {
 
 function joinScreen(roomid) {
     // Join an existing screen sharing session
-    $('#desc').attr('disabled', true);
-    $('#create').attr('disabled', true).unbind('click');
-    $('#roomid').attr('disabled', true);
-    $('#join').attr('disabled', true).unbind('click');
-    var roomid = $('#roomid').val();
     if (isNaN(roomid)) {
         history.pushState({}, '', "");
         window.location.reload();
@@ -360,7 +357,6 @@ const buildRoom = room => {
             displayMessage(change.doc.id, message.timestamp, message.name, message.text, message.profilePicUrl, message.imageUrl);
         }
     }));
-    document.querySelector('#container').classList.add('visible');
 };
 
 (() => {

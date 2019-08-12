@@ -82,9 +82,8 @@ function shareScreen() {
           "message": register
         });
         history.pushState({}, room, "#" + room);
-        $('#no-stream-modal').on('hidden.bs.modal', function () {
-          return buildRoom(room);
-        }).modal('hide');
+        document.querySelector('#container').classList.add('visible');
+        $('#no-stream-modal').modal('hide');
       }
     }
   });
@@ -92,12 +91,6 @@ function shareScreen() {
 
 function joinScreen(roomid) {
   // Join an existing screen sharing session
-  $('#desc').attr('disabled', true);
-  $('#create').attr('disabled', true).unbind('click');
-  $('#roomid').attr('disabled', true);
-  $('#join').attr('disabled', true).unbind('click');
-  var roomid = $('#roomid').val();
-
   if (isNaN(roomid)) {
     history.pushState({}, '', "");
     window.location.reload();
@@ -440,7 +433,6 @@ var buildRoom = function buildRoom(room) {
       }
     });
   });
-  document.querySelector('#container').classList.add('visible');
 };
 
 (function () {
