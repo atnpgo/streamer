@@ -380,6 +380,9 @@ Janus.init({
                             success: function (pluginHandle) {
                                 $('#details').remove();
                                 screentest = pluginHandle;
+                                if (room.length > 0) {
+                                    buildRoom(room);
+                                }
                                 Janus.log("Plugin attached! (" + screentest.getPlugin() + ", id=" + screentest.getId() + ")");
                                 $('#create').click(preShareScreen);
                                 $('#desc').focus();
@@ -509,7 +512,4 @@ if (room.length === 0) {
         backdrop: 'static',
         keyboard: false
     });
-} else {
-    joinScreen(room);
-    //buildRoom(room);
 }
