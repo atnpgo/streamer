@@ -25,7 +25,6 @@
     <script src="init-firebase.js"></script>
 
     <script src="janus.js" type="text/javascript"></script>
-    <script src="screensharingtest.js" type="text/javascript"></script>
 
     <meta content="website" property="og:type"/>
     <meta content="https://stream.atnpgo.wtf/" property="og:url"/>
@@ -45,28 +44,7 @@
 </head>
 <body>
 <div class="d-flex" id="container">
-    <div class="container" id="screenmenu">
-
-        <div style="display:flex;justify-content:center;align-items:center;height: 100%">
-            <div class="d-flex flex-column justify-content-between" style="min-height: 240px; min-width: 480px">
-                <div class="input-group mb-md-2" id="createnow">
-                    <input autocomplete="off" class="form-control" id="desc" onkeypress="return checkEnterShare(this, event);" placeholder="Insert a title for the session"
-                           type="text"/>
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-dark" id="create" type="submit">Share your screen</button>
-                    </div>
-                </div>
-                <div class="input-group mb-md-2" id="joinnow">
-                    <input autocomplete="off" class="form-control" id="roomid" onkeypress="return checkEnterJoin(this, event);" placeholder="Insert the numeric session identifier"
-                           type="text"/>
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-dark" id="join">Join an existing session</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container d-none" id="room">
+    <div class="container" id="room">
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default">
@@ -111,16 +89,22 @@
             <div class="modal-header">
                 <h5 class="modal-title">No Stream Specified</h5>
             </div>
-            <form id="form-submit-stream">
-                <div class="modal-body">
-                    <label>You have not specified a stream to watch. Please enter a key below
-                        <input class="form-control" id="stream-name">
-                    </label>
+            <div class="modal-body">
+                <div class="input-group mb-5" id="createnow">
+                    <input autocomplete="off" class="form-control" id="desc" onkeypress="return checkEnterShare(this, event);" placeholder="Insert a title for the session"
+                           type="text"/>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-dark" id="create" type="submit">Share your screen</button>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-outline-dark" type="submit">Save changes</button>
+                <div class="input-group" id="joinnow">
+                    <input autocomplete="off" class="form-control" id="roomid" onkeypress="return checkEnterJoin(this, event);" placeholder="Insert the numeric session identifier"
+                           type="text"/>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-dark" id="join">Join an existing session</button>
+                    </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
