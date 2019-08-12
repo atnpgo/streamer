@@ -360,96 +360,81 @@ const buildRoom = room => {
     }));
 };
 
-(() => {
 
-    Janus.init({
-        debug: "all", callback: function () {
-            // Use a button to start the demo
-            // Make sure the browser supports WebRTC
-            if (!Janus.isWebrtcSupported()) {
-                alert("No WebRTC support... ");
-                return;
-            }
-            // Create session
-            janus = new Janus(
-                {
-                    server: server,
-                    success: function () {
-                        // Attach to video room test plugin
-                        janus.attach(
-                            {
-                                plugin: "janus.plugin.videoroom",
-                                opaqueId: opaqueId,
-                                success: function (pluginHandle) {
-                                    $('#details').remove();
-                                    screentest = pluginHandle;
-                                    Janus.log("Plugin attached! (" + screentest.getPlugin() + ", id=" + screentest.getId() + ")");
-                                    $('#create').click(preShareScreen);
-                                    $('#desc').focus();
-                                },
-                                error: function (error) {
-                                    Janus.error("  -- Error attaching plugin...", error);
-                                    alert("Error attaching plugin... " + error);
-                                },
-                                consentDialog: function (on) {
-                                    Janus.debug("Consent dialog should be " + (on ? "on" : "off") + " now");
-                                },
-                                webrtcState: function (on) {
-                                    Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
-                                    if (on) {
-                                        //alert("Your screen sharing session just started: pass the " + room + "session identifier to those who want to attend.");
-                                        buildRoom(room);
-                                    } else {
-                                        alert("Your screen sharing session just stopped.");
-                                        janus.destroy();
-                                        window.location.reload();
-                                    }
-                                },
-                                onmessage: function (msg, jsep) {
-                                    Janus.debug(" ::: Got a message (publisher) :::");
-                                    Janus.debug(msg);
-                                    var event = msg["videoroom"];
-                                    Janus.debug("Event: " + event);
-                                    if (event != undefined && event != null) {
-                                        if (event === "joined") {
-                                            myid = msg["id"];
-                                            $('#session').html(room);
-                                            $('#title').html(msg["description"]);
-                                            Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
-                                            if (role === "publisher") {
-                                                // This is our session, publish our stream
-                                                Janus.debug("Negotiating WebRTC stream for our screen (capture " + capture + ")");
-                                                screentest.createOffer(
-                                                    {
-                                                        media: {video: capture, audioSend: true, videoRecv: false},	// Screen sharing Publishers are sendonly
-                                                        success: function (jsep) {
-                                                            Janus.debug("Got publisher SDP!");
-                                                            Janus.debug(jsep);
-                                                            var publish = {"request": "configure", "audio": true, "video": true};
-                                                            screentest.send({"message": publish, "jsep": jsep});
-                                                        },
-                                                        error: function (error) {
-                                                            Janus.error("WebRTC error:", error);
-                                                            alert("WebRTC error... " + JSON.stringify(error));
-                                                        }
-                                                    });
-                                            } else {
-                                                // We're just watching a session, any feed to attach to?
-                                                if (msg["publishers"] !== undefined && msg["publishers"] !== null) {
-                                                    var list = msg["publishers"];
-                                                    Janus.debug("Got a list of available publishers/feeds:");
-                                                    Janus.debug(list);
-                                                    for (var f in list) {
-                                                        var id = list[f]["id"];
-                                                        var display = list[f]["display"];
-                                                        Janus.debug("  >> [" + id + "] " + display);
-                                                        newRemoteFeed(id, display)
+Janus.init({
+    debug: "all", callback: function () {
+        // Use a button to start the demo
+        // Make sure the browser supports WebRTC
+        if (!Janus.isWebrtcSupported()) {
+            alert("No WebRTC support... ");
+            return;
+        }
+        // Create session
+        janus = new Janus(
+            {
+                server: server,
+                success: function () {
+                    // Attach to video room test plugin
+                    janus.attach(
+                        {
+                            plugin: "janus.plugin.videoroom",
+                            opaqueId: opaqueId,
+                            success: function (pluginHandle) {
+                                $('#details').remove();
+                                screentest = pluginHandle;
+                                Janus.log("Plugin attached! (" + screentest.getPlugin() + ", id=" + screentest.getId() + ")");
+                                $('#create').click(preShareScreen);
+                                $('#desc').focus();
+                            },
+                            error: function (error) {
+                                Janus.error("  -- Error attaching plugin...", error);
+                                alert("Error attaching plugin... " + error);
+                            },
+                            consentDialog: function (on) {
+                                Janus.debug("Consent dialog should be " + (on ? "on" : "off") + " now");
+                            },
+                            webrtcState: function (on) {
+                                Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
+                                if (on) {
+                                    //alert("Your screen sharing session just started: pass the " + room + "session identifier to those who want to attend.");
+                                    buildRoom(room);
+                                } else {
+                                    alert("Your screen sharing session just stopped.");
+                                    janus.destroy();
+                                    window.location.reload();
+                                }
+                            },
+                            onmessage: function (msg, jsep) {
+                                Janus.debug(" ::: Got a message (publisher) :::");
+                                Janus.debug(msg);
+                                var event = msg["videoroom"];
+                                Janus.debug("Event: " + event);
+                                if (event != undefined && event != null) {
+                                    if (event === "joined") {
+                                        myid = msg["id"];
+                                        $('#session').html(room);
+                                        $('#title').html(msg["description"]);
+                                        Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
+                                        if (role === "publisher") {
+                                            // This is our session, publish our stream
+                                            Janus.debug("Negotiating WebRTC stream for our screen (capture " + capture + ")");
+                                            screentest.createOffer(
+                                                {
+                                                    media: {video: capture, audioSend: true, videoRecv: false},	// Screen sharing Publishers are sendonly
+                                                    success: function (jsep) {
+                                                        Janus.debug("Got publisher SDP!");
+                                                        Janus.debug(jsep);
+                                                        var publish = {"request": "configure", "audio": true, "video": true};
+                                                        screentest.send({"message": publish, "jsep": jsep});
+                                                    },
+                                                    error: function (error) {
+                                                        Janus.error("WebRTC error:", error);
+                                                        alert("WebRTC error... " + JSON.stringify(error));
                                                     }
-                                                }
-                                            }
-                                        } else if (event === "event") {
-                                            // Any feed to attach to?
-                                            if (role === "listener" && msg["publishers"] !== undefined && msg["publishers"] !== null) {
+                                                });
+                                        } else {
+                                            // We're just watching a session, any feed to attach to?
+                                            if (msg["publishers"] !== undefined && msg["publishers"] !== null) {
                                                 var list = msg["publishers"];
                                                 Janus.debug("Got a list of available publishers/feeds:");
                                                 Janus.debug(list);
@@ -459,67 +444,78 @@ const buildRoom = room => {
                                                     Janus.debug("  >> [" + id + "] " + display);
                                                     newRemoteFeed(id, display)
                                                 }
-                                            } else if (msg["leaving"] !== undefined && msg["leaving"] !== null) {
-                                                // One of the publishers has gone away?
-                                                var leaving = msg["leaving"];
-                                                Janus.log("Publisher left: " + leaving);
-                                                if (role === "listener" && msg["leaving"] === source) {
-                                                    alert("The screen sharing session is over, the publisher left");
-                                                    window.location.reload();
-                                                }
-                                            } else if (msg["error"] !== undefined && msg["error"] !== null) {
-                                                alert(msg["error"]);
                                             }
                                         }
+                                    } else if (event === "event") {
+                                        // Any feed to attach to?
+                                        if (role === "listener" && msg["publishers"] !== undefined && msg["publishers"] !== null) {
+                                            var list = msg["publishers"];
+                                            Janus.debug("Got a list of available publishers/feeds:");
+                                            Janus.debug(list);
+                                            for (var f in list) {
+                                                var id = list[f]["id"];
+                                                var display = list[f]["display"];
+                                                Janus.debug("  >> [" + id + "] " + display);
+                                                newRemoteFeed(id, display)
+                                            }
+                                        } else if (msg["leaving"] !== undefined && msg["leaving"] !== null) {
+                                            // One of the publishers has gone away?
+                                            var leaving = msg["leaving"];
+                                            Janus.log("Publisher left: " + leaving);
+                                            if (role === "listener" && msg["leaving"] === source) {
+                                                alert("The screen sharing session is over, the publisher left");
+                                                window.location.reload();
+                                            }
+                                        } else if (msg["error"] !== undefined && msg["error"] !== null) {
+                                            alert(msg["error"]);
+                                        }
                                     }
-                                    if (jsep !== undefined && jsep !== null) {
-                                        Janus.debug("Handling SDP as well...");
-                                        Janus.debug(jsep);
-                                        screentest.handleRemoteJsep({jsep: jsep});
-                                    }
-                                },
-                                onlocalstream: function (stream) {
-                                    Janus.debug(" ::: Got a local stream :::");
-                                    Janus.debug(stream);
-                                    $('#screenmenu').toggleClass('d-flex d-none');
-                                    $('#room').toggleClass('d-flex d-none');
-                                    if ($('#screenvideo').length === 0) {
-                                        $('#screencapture').append('<video class="rounded centered" id="screenvideo" width="100%" height="100%" autoplay playsinline muted="muted"/>');
-                                    }
-                                    Janus.attachMediaStream($('#screenvideo').get(0), stream);
-                                },
-                                onremotestream: function (stream) {
-                                    // The publisher stream is sendonly, we don't expect anything here
-                                },
-                                oncleanup: function () {
-                                    Janus.log(" ::: Got a cleanup notification :::");
-                                    $('#screencapture').empty();
-                                    $('#room').toggleClass('d-flex d-none');
                                 }
-                            });
-                    },
-                    error: function (error) {
-                        Janus.error(error);
-                        alert(error);
-                        window.location.reload();
-                    },
-                    destroyed: function () {
-                        window.location.reload();
-                    }
-                });
-        }
-    });
-
-    const room = window.location.hash.substring(1);
-    if (room.length === 0) {
-        $('#no-stream-modal').modal({
-            backdrop: 'static',
-            keyboard: false
-        });
-    } else {
-        joinScreen(room);
-        //buildRoom(room);
+                                if (jsep !== undefined && jsep !== null) {
+                                    Janus.debug("Handling SDP as well...");
+                                    Janus.debug(jsep);
+                                    screentest.handleRemoteJsep({jsep: jsep});
+                                }
+                            },
+                            onlocalstream: function (stream) {
+                                Janus.debug(" ::: Got a local stream :::");
+                                Janus.debug(stream);
+                                $('#screenmenu').toggleClass('d-flex d-none');
+                                $('#room').toggleClass('d-flex d-none');
+                                if ($('#screenvideo').length === 0) {
+                                    $('#screencapture').append('<video class="rounded centered" id="screenvideo" width="100%" height="100%" autoplay playsinline muted="muted"/>');
+                                }
+                                Janus.attachMediaStream($('#screenvideo').get(0), stream);
+                            },
+                            onremotestream: function (stream) {
+                                // The publisher stream is sendonly, we don't expect anything here
+                            },
+                            oncleanup: function () {
+                                Janus.log(" ::: Got a cleanup notification :::");
+                                $('#screencapture').empty();
+                                $('#room').toggleClass('d-flex d-none');
+                            }
+                        });
+                },
+                error: function (error) {
+                    Janus.error(error);
+                    alert(error);
+                    //window.location.reload();
+                },
+                destroyed: function () {
+                    window.location.reload();
+                }
+            });
     }
+});
 
-
-})();
+room = window.location.hash.substring(1);
+if (room.length === 0) {
+    $('#no-stream-modal').modal({
+        backdrop: 'static',
+        keyboard: false
+    });
+} else {
+    joinScreen(room);
+    //buildRoom(room);
+}
