@@ -109,6 +109,7 @@ function joinScreen(roomid) {
   screentest.send({
     "message": register
   });
+  buildRoom(room);
 }
 
 function newRemoteFeed(id, display) {

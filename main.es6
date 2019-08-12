@@ -88,6 +88,7 @@ function joinScreen(roomid) {
     myusername = randomString(12);
     var register = {"request": "join", "room": room, "ptype": "publisher", "display": myusername};
     screentest.send({"message": register});
+    buildRoom(room);
 }
 
 function newRemoteFeed(id, display) {
