@@ -37,16 +37,8 @@ function preShareScreen() {
         return;
     }
     // Create a new room
-    $('#desc').attr('disabled', true);
-    $('#create').attr('disabled', true).unbind('click');
-    $('#roomid').attr('disabled', true);
-    $('#join').attr('disabled', true).unbind('click');
     if ($('#desc').val() === "") {
         alert("Please insert a description for the room");
-        $('#desc').removeAttr('disabled', true);
-        $('#create').removeAttr('disabled', true).click(preShareScreen);
-        $('#roomid').removeAttr('disabled', true);
-        $('#join').removeAttr('disabled', true).click(joinScreen);
         return;
     }
     capture = "screen";
@@ -82,17 +74,7 @@ function shareScreen() {
     });
 }
 
-function checkEnterJoin(field, event) {
-    var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
-    if (theCode == 13) {
-        joinScreen();
-        return false;
-    } else {
-        return true;
-    }
-}
-
-function joinScreen() {
+function joinScreen(roomid) {
     // Join an existing screen sharing session
     $('#desc').attr('disabled', true);
     $('#create').attr('disabled', true).unbind('click');
@@ -100,11 +82,8 @@ function joinScreen() {
     $('#join').attr('disabled', true).unbind('click');
     var roomid = $('#roomid').val();
     if (isNaN(roomid)) {
-        alert("Session identifiers are numeric only");
-        $('#desc').removeAttr('disabled', true);
-        $('#create').removeAttr('disabled', true).click(preShareScreen);
-        $('#roomid').removeAttr('disabled', true);
-        $('#join').removeAttr('disabled', true).click(joinScreen);
+        history.pushState({}, '', "");
+        window.location.reload();
         return;
     }
     room = parseInt(roomid);
@@ -408,18 +387,8 @@ const buildRoom = room => {
                                     $('#details').remove();
                                     screentest = pluginHandle;
                                     Janus.log("Plugin attached! (" + screentest.getPlugin() + ", id=" + screentest.getId() + ")");
-                                    // Prepare the username registration
-                                    $('#screenmenu').removeClass('hide').show();
-                                    $('#createnow').removeClass('hide').show();
                                     $('#create').click(preShareScreen);
-                                    $('#joinnow').removeClass('hide').show();
-                                    $('#join').click(joinScreen);
                                     $('#desc').focus();
-                                    $('#start').removeAttr('disabled').html("Stop")
-                                        .click(function () {
-                                            $(this).attr('disabled', true);
-                                            janus.destroy();
-                                        });
                                 },
                                 error: function (error) {
                                     Janus.error("  -- Error attaching plugin...", error);
@@ -431,7 +400,8 @@ const buildRoom = room => {
                                 webrtcState: function (on) {
                                     Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
                                     if (on) {
-                                        alert("Your screen sharing session just started: pass the <b>" + room + "</b> session identifier to those who want to attend.");
+                                        //alert("Your screen sharing session just started: pass the " + room + "session identifier to those who want to attend.");
+                                        buildRoom(room);
                                     } else {
                                         alert("Your screen sharing session just stopped.");
                                         janus.destroy();
@@ -550,7 +520,8 @@ const buildRoom = room => {
             keyboard: false
         });
     } else {
-        buildRoom(room);
+        joinScreen(room);
+        //buildRoom(room);
     }
 
 
