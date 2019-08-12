@@ -30,7 +30,6 @@ function checkEnterShare(field, event) {
 function preShareScreen() {
   if (!Janus.isExtensionEnabled()) {
     alert("You're using Chrome but don't have the screensharing extension installed: click <b><a href='https://chrome.google.com/webstore/detail/janus-webrtc-screensharin/hapfgfdkleiggjjpfpenajgdnfckjpaj' target='_blank'>here</a></b> to do so");
-    window.location.reload();
     return;
   } // Create a new room
 
@@ -93,7 +92,6 @@ function joinScreen(roomid) {
   // Join an existing screen sharing session
   if (isNaN(roomid)) {
     history.pushState({}, '', "");
-    window.location.reload();
     return;
   }
 
@@ -477,7 +475,6 @@ Janus.init({
             } else {
               alert("Your screen sharing session just stopped.");
               janus.destroy();
-              window.location.reload();
             }
           },
           onmessage: function onmessage(msg, jsep) {
@@ -556,7 +553,6 @@ Janus.init({
 
                   if (role === "listener" && msg["leaving"] === source) {
                     alert("The screen sharing session is over, the publisher left");
-                    window.location.reload();
                   }
                 } else if (msg["error"] !== undefined && msg["error"] !== null) {
                   alert(msg["error"]);
@@ -595,10 +591,9 @@ Janus.init({
       },
       error: function error(_error5) {
         Janus.error(_error5);
-        alert(_error5); //window.location.reload();
+        alert(_error5);
       },
       destroyed: function destroyed() {
-        window.location.reload();
       }
     });
   }

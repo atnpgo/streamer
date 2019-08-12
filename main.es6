@@ -33,7 +33,6 @@ function checkEnterShare(field, event) {
 function preShareScreen() {
     if (!Janus.isExtensionEnabled()) {
         alert("You're using Chrome but don't have the screensharing extension installed: click <b><a href='https://chrome.google.com/webstore/detail/janus-webrtc-screensharin/hapfgfdkleiggjjpfpenajgdnfckjpaj' target='_blank'>here</a></b> to do so");
-        window.location.reload();
         return;
     }
     // Create a new room
@@ -80,7 +79,6 @@ function joinScreen(roomid) {
     // Join an existing screen sharing session
     if (isNaN(roomid)) {
         history.pushState({}, '', "");
-        window.location.reload();
         return;
     }
     room = parseInt(roomid);
@@ -401,7 +399,6 @@ Janus.init({
                                 } else {
                                     alert("Your screen sharing session just stopped.");
                                     janus.destroy();
-                                    window.location.reload();
                                 }
                             },
                             onmessage: function (msg, jsep) {
@@ -464,7 +461,6 @@ Janus.init({
                                             Janus.log("Publisher left: " + leaving);
                                             if (role === "listener" && msg["leaving"] === source) {
                                                 alert("The screen sharing session is over, the publisher left");
-                                                window.location.reload();
                                             }
                                         } else if (msg["error"] !== undefined && msg["error"] !== null) {
                                             alert(msg["error"]);
@@ -500,10 +496,8 @@ Janus.init({
                 error: function (error) {
                     Janus.error(error);
                     alert(error);
-                    //window.location.reload();
                 },
                 destroyed: function () {
-                    window.location.reload();
                 }
             });
     }
